@@ -1,0 +1,368 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="GoGreenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Customers">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="CustomerName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Address" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Phone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Emailid" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="City" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="State" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderDetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderId" Type="int" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OrderDate" Type="datetime" Nullable="false" />
+          <Property Name="CustomerId" Type="varchar" MaxLength="25" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product_Price">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="Pack" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Price" Type="float" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Category" Type="varchar" MaxLength="50" />
+          <Property Name="ImageUrl" Type="varchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_OrderDetails_OrderHeader">
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="1" />
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetails_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="OrderDetails" Type="Self.OrderDetails" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderHeader_OrderHeader">
+          <End Role="Customers" Type="Self.Customers" Multiplicity="1" />
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="OrderHeader">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Price_Product">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Product_Price" Type="Self.Product_Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Product_Price">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GoGreenModelStoreContainer">
+          <EntitySet Name="Customers" EntityType="Self.Customers" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OrderHeader" EntityType="Self.OrderHeader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product_Price" EntityType="Self.Product_Price" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_OrderDetails_OrderHeader" Association="Self.FK_OrderDetails_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeader" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetails_Products" Association="Self.FK_OrderDetails_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderHeader_OrderHeader" Association="Self.FK_OrderHeader_OrderHeader">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="OrderHeader" EntitySet="OrderHeader" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Price_Product" Association="Self.FK_Product_Price_Product">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Product_Price" EntitySet="Product_Price" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="GoGreenModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Customer">
+          <Key>
+            <PropertyRef Name="CustomerId" />
+          </Key>
+          <Property Name="CustomerId" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Address" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Emailid" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="State" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="OrderHeaders" Relationship="Self.FK_OrderHeader_OrderHeader" FromRole="Customers" ToRole="OrderHeader" />
+        </EntityType>
+        <EntityType Name="OrderDetail">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderId" Type="Int32" Nullable="false" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="OrderHeader" Relationship="Self.FK_OrderDetails_OrderHeader" FromRole="OrderDetails" ToRole="OrderHeader" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_OrderDetails_Products" FromRole="OrderDetails" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="OrderHeader">
+          <Key>
+            <PropertyRef Name="OrderId" />
+          </Key>
+          <Property Name="OrderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CustomerId" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Customer" Relationship="Self.FK_OrderHeader_OrderHeader" FromRole="OrderHeader" ToRole="Customers" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_OrderHeader" FromRole="OrderHeader" ToRole="OrderDetails" />
+        </EntityType>
+        <EntityType Name="Product_Price">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="Pack" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Price" Type="Double" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Product_Price_Product" FromRole="Product_Price" ToRole="Products" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="ProductId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImageUrl" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="OrderDetails" Relationship="Self.FK_OrderDetails_Products" FromRole="Products" ToRole="OrderDetails" />
+          <NavigationProperty Name="Product_Price" Relationship="Self.FK_Product_Price_Product" FromRole="Products" ToRole="Product_Price" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserId" />
+          </Key>
+          <Property Name="UserId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_OrderHeader_OrderHeader">
+          <End Role="Customers" Type="Self.Customer" Multiplicity="1" />
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Customers">
+              <PropertyRef Name="CustomerId" />
+            </Principal>
+            <Dependent Role="OrderHeader">
+              <PropertyRef Name="CustomerId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetails_OrderHeader">
+          <End Role="OrderHeader" Type="Self.OrderHeader" Multiplicity="1" />
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="OrderHeader">
+              <PropertyRef Name="OrderId" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="OrderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_OrderDetails_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+          <End Role="OrderDetails" Type="Self.OrderDetail" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="OrderDetails">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Price_Product">
+          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+          <End Role="Product_Price" Type="Self.Product_Price" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="ProductId" />
+            </Principal>
+            <Dependent Role="Product_Price">
+              <PropertyRef Name="ProductId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GoGreenEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Customers" EntityType="Self.Customer" />
+          <EntitySet Name="OrderDetails" EntityType="Self.OrderDetail" />
+          <EntitySet Name="OrderHeaders" EntityType="Self.OrderHeader" />
+          <EntitySet Name="Product_Price" EntityType="Self.Product_Price" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <AssociationSet Name="FK_OrderHeader_OrderHeader" Association="Self.FK_OrderHeader_OrderHeader">
+            <End Role="Customers" EntitySet="Customers" />
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetails_OrderHeader" Association="Self.FK_OrderDetails_OrderHeader">
+            <End Role="OrderHeader" EntitySet="OrderHeaders" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_OrderDetails_Products" Association="Self.FK_OrderDetails_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="OrderDetails" EntitySet="OrderDetails" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Price_Product" Association="Self.FK_Product_Price_Product">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Product_Price" EntitySet="Product_Price" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="GoGreenModelStoreContainer" CdmEntityContainer="GoGreenEntities">
+          <EntitySetMapping Name="Customers">
+            <EntityTypeMapping TypeName="GoGreenModel.Customer">
+              <MappingFragment StoreEntitySet="Customers">
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="Emailid" ColumnName="Emailid" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="State" ColumnName="State" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderDetails">
+            <EntityTypeMapping TypeName="GoGreenModel.OrderDetail">
+              <MappingFragment StoreEntitySet="OrderDetails">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OrderHeaders">
+            <EntityTypeMapping TypeName="GoGreenModel.OrderHeader">
+              <MappingFragment StoreEntitySet="OrderHeader">
+                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Product_Price">
+            <EntityTypeMapping TypeName="GoGreenModel.Product_Price">
+              <MappingFragment StoreEntitySet="Product_Price">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="Pack" ColumnName="Pack" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="GoGreenModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="GoGreenModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
